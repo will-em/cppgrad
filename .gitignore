@@ -37,4 +37,11 @@
 .DS_Store
 Thumbs.db
 
-cppgrad
+# CMake build directory
+build/
+
+# CMake files
+CMakeCache.txt
+CMakeFiles/
+*.cmake
+!CMakeLists.txt
