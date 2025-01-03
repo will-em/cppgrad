@@ -38,6 +38,12 @@ TEST_CASE("Value addition with negative numbers", "[arithmetic]") {
     REQUIRE(std::abs(o.data() - (-5.0)) < 1e-6);
 }
 
+TEST_CASE("Value self addition", "[arithmetic]") {
+    Value a(2.0);
+    Value b = a + a;
+    REQUIRE(std::abs(b.data() - 4.0) < 1e-6);
+}
+
 // Subtraction
 TEST_CASE("Value subtraction with positive numbers", "[arithmetic]") {
     Value a(2.0);
@@ -72,6 +78,12 @@ TEST_CASE("Value subtraction with negative numbers", "[arithmetic]") {
     Value n(-2.5);
     Value o = m - n;
     REQUIRE(std::abs(o.data() - 0.0) < 1e-6);
+}
+
+TEST_CASE("Value self subtraction", "[arithmetic]") {
+    Value a(2.0);
+    Value b = a - a;
+    REQUIRE(std::abs(b.data() - 0.0) < 1e-6);
 }
 
 // Multiplication
@@ -110,6 +122,12 @@ TEST_CASE("Value multiplication with negative numbers", "[arithmetic]") {
     REQUIRE(std::abs(o.data() - 6.25) < 1e-6);
 }
 
+TEST_CASE("Value self multiplication", "[arithmetic]") {
+    Value a(3.0);
+    Value b = a * a;
+    REQUIRE(std::abs(b.data() - 9.0) < 1e-6);
+}
+
 // Division
 TEST_CASE("Value division with positive numbers", "[arithmetic]") {
     Value a(6.0);
@@ -143,4 +161,10 @@ TEST_CASE("Value division by zero", "[arithmetic]") {
     Value m(1.0);
     Value n(0.0);
     REQUIRE_THROWS_AS(m / n, std::runtime_error);
+}
+
+TEST_CASE("Value self division", "[arithmetic]") {
+    Value a(4.0);
+    Value b = a / a;
+    REQUIRE(std::abs(b.data() - 1.0) < 1e-6);
 }

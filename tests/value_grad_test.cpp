@@ -48,6 +48,13 @@ TEST_CASE("Gradient computation for addition with negative numbers", "[gradient]
     REQUIRE(std::abs(n.grad() - 1.0) < 1e-6);
 }
 
+TEST_CASE("Gradient computation for self addition", "[gradient]") {
+    Value a(2.0);
+    Value b = a + a;  // b = 2.0 + 2.0 = 4.0
+    b.backward();
+    REQUIRE(std::abs(a.grad() - 2.0) < 1e-6);  // gradient should be 2.0 because a is used twice
+}
+
 // Subtraction
 TEST_CASE("Gradient computation for subtraction with positive numbers", "[gradient]") {
     Value a(5.0);
@@ -92,6 +99,13 @@ TEST_CASE("Gradient computation for subtraction with negative numbers", "[gradie
     o.backward();
     REQUIRE(std::abs(m.grad() - 1.0) < 1e-6);
     REQUIRE(std::abs(n.grad() + 1.0) < 1e-6);
+}
+
+TEST_CASE("Gradient computation for self subtraction", "[gradient]") {
+    Value a(2.0);
+    Value b = a - a;  // b = 2.0 - 2.0 = 0.0
+    b.backward();
+    REQUIRE(std::abs(a.grad() - 0.0) < 1e-6);  // gradient should be 0.0 because effects cancel out
 }
 
 // Multiplication
@@ -140,6 +154,13 @@ TEST_CASE("Gradient computation for multiplication with negative numbers", "[gra
     REQUIRE(std::abs(n.grad() + 2.5) < 1e-6);
 }
 
+TEST_CASE("Gradient computation for self multiplication", "[gradient]") {
+    Value a(3.0);
+    Value b = a * a;  // b = 3.0 * 3.0 = 9.0
+    b.backward();
+    REQUIRE(std::abs(a.grad() - 6.0) < 1e-6);  // gradient should be 2 * a
+}
+
 // Division
 TEST_CASE("Gradient computation for division with positive numbers", "[gradient]") {
     Value a(6.0);
@@ -184,4 +205,11 @@ TEST_CASE("Gradient computation for division with negative numbers", "[gradient]
     o.backward();
     REQUIRE(std::abs(m.grad() - (1.0 / n.data())) < 1e-6);
     REQUIRE(std::abs(n.grad() + (m.data() / (n.data() * n.data()))) < 1e-6);
+}
+
+TEST_CASE("Gradient computation for self division", "[gradient]") {
+    Value a(4.0);
+    Value b = a / a;  // b = 4.0 / 4.0 = 1.0
+    b.backward();
+    REQUIRE(std::abs(a.grad() - 0.0) < 1e-6);  // gradient should be 0 because effects cancel out
 }
