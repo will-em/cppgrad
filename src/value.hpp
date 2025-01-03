@@ -5,33 +5,47 @@
 #include <functional>
 #include <unordered_set>
 
-
 class Value {
 private:
     struct Data;
-    typedef std::shared_ptr<Data> DataPtr;
+    using DataPtr = std::shared_ptr<Data>;
 
     struct Data {
         double data;
         double grad;
-        std::vector<DataPtr> children; 
-        std::function<void()> backward_fn;           
-        std::string op;                          
+        std::vector<DataPtr> children;
+        std::function<void()> backward_fn;
+        std::string op;
 
-        Data(double data, const std::vector<DataPtr>& children = {}, const std::string& op = "")
+        explicit Data(double data, const std::vector<DataPtr>& children = {}, const std::string& op = "")
             : data(data), grad(0.0), children(children), backward_fn([]() {}), op(op) {}
     };
 
     DataPtr data_ptr;
 
 public:
-    // Constructor
-    Value(double data, const std::vector<DataPtr> children = {}, const std::string& op = "")
+    // Constructors
+    explicit Value(double data, const std::vector<DataPtr> children = {}, const std::string& op = "")
         : data_ptr(std::make_shared<Data>(data, children, op)) {}
 
+    Value(const Value&) = default;
+    Value(Value&& other) noexcept = default;
+
+    // Assignment operators
+    Value& operator=(const Value&) = default;
+    Value& operator=(Value&& other) noexcept = default;
+
     // Accessors
-    double data() const { return data_ptr->data; }
-    double grad() const { return data_ptr->grad; }
+    double data() const noexcept { return data_ptr->data; }
+    double grad() const noexcept { return data_ptr->grad; }
+    std::string op() const noexcept { return data_ptr->op; }
+
+    // String representation
+    std::string str() const {
+        return "Value(data=" + std::to_string(data()) + 
+               ", grad=" + std::to_string(grad()) + 
+               ", op='" + op() + "')";
+    }
 
     // Operator overloads
     Value operator+(const Value& other) const {
@@ -100,5 +114,9 @@ public:
         for (auto it = topo_order.rbegin(); it != topo_order.rend(); ++it) {
             (*it)->backward_fn();
         }
+    }
+
+    friend std::ostream& operator<<(std::ostream& os, const Value& v) {
+        return os << v.str();
     }
 };
