@@ -3,6 +3,7 @@
 #include <vector>
 #include <string>
 #include <functional>
+#include <unordered_set>
 
 
 class Value {
@@ -42,5 +43,28 @@ public:
         };
 
         return result;
+    }
+
+    // Backward pass
+    void backward() {
+
+        // Topological sort
+        std::vector<DataPtr> topo_order;
+        std::unordered_set<DataPtr> visited;
+        std::function<void(const DataPtr&)> buildTopo = [&](const DataPtr& node) {
+            if (visited.find(node) != visited.end()) return; // Already visited
+            visited.insert(node);
+            for (const auto& child : node->children) {
+                buildTopo(child);
+            }
+            topo_order.push_back(node);
+        };
+
+        buildTopo(data_ptr);
+
+        data_ptr->grad = 1.0;
+        for (auto it = topo_order.rbegin(); it != topo_order.rend(); ++it) {
+            (*it)->backward_fn();
+        }
     }
 };
