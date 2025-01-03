@@ -168,3 +168,62 @@ TEST_CASE("Value self division", "[arithmetic]") {
     Value b = a / a;
     REQUIRE(std::abs(b.data() - 1.0) < 1e-6);
 }
+
+// Power
+TEST_CASE("Value power with positive exponent", "[arithmetic]") {
+    Value a(2.0);
+    Value b = a.pow(3.0);
+    REQUIRE(std::abs(b.data() - 8.0) < 1e-6);
+}
+
+TEST_CASE("Value power with zero exponent", "[arithmetic]") {
+    Value c(2.0);
+    Value d = c.pow(0.0);
+    REQUIRE(std::abs(d.data() - 1.0) < 1e-6);
+}
+
+TEST_CASE("Value power with one exponent", "[arithmetic]") {
+    Value e(2.0);
+    Value f = e.pow(1.0);
+    REQUIRE(std::abs(f.data() - 2.0) < 1e-6);
+}
+
+TEST_CASE("Value power with negative exponent", "[arithmetic]") {
+    Value g(2.0);
+    Value h = g.pow(-2.0);
+    REQUIRE(std::abs(h.data() - 0.25) < 1e-6);
+}
+
+TEST_CASE("Value power with decimal exponent", "[arithmetic]") {
+    Value i(4.0);
+    Value j = i.pow(0.5);
+    REQUIRE(std::abs(j.data() - 2.0) < 1e-6);
+}
+
+TEST_CASE("Value power with negative base and integer exponent", "[arithmetic]") {
+    Value k(-2.0);
+    Value l = k.pow(3.0);
+    REQUIRE(std::abs(l.data() - (-8.0)) < 1e-6);
+}
+
+TEST_CASE("Value power with negative base and even exponent", "[arithmetic]") {
+    Value m(-2.0);
+    Value n = m.pow(2.0);
+    REQUIRE(std::abs(n.data() - 4.0) < 1e-6);
+}
+
+TEST_CASE("Value power with negative base and fractional exponent", "[arithmetic]") {
+    Value o(-4.0);
+    REQUIRE_THROWS_AS(o.pow(0.5), std::runtime_error);
+}
+
+TEST_CASE("Value power with zero base and positive exponent", "[arithmetic]") {
+    Value o(0.0);
+    Value p = o.pow(3.0);
+    REQUIRE(std::abs(p.data() - 0.0) < 1e-6);
+}
+
+TEST_CASE("Value power with zero base and zero exponent", "[arithmetic]") {
+    Value q(0.0);
+    REQUIRE_THROWS_AS(q.pow(0.0), std::runtime_error);
+}

@@ -4,6 +4,7 @@
 #include <string>
 #include <functional>
 #include <unordered_set>
+#include <cmath>
 
 class Value {
 private:
@@ -88,6 +89,23 @@ public:
         result.data_ptr->backward_fn = [result, this, other]() {
             this->data_ptr->grad += result.data_ptr->grad / other.data_ptr->data;
             other.data_ptr->grad -= result.data_ptr->grad * this->data_ptr->data / (other.data_ptr->data * other.data_ptr->data);
+        };
+
+        return result;
+    }
+
+    Value pow(double exponent) const {
+        if (data_ptr->data < 0 && std::floor(exponent) != exponent) {
+            throw std::runtime_error("Imaginary result not allowed");
+        }
+        if (data_ptr->data == 0 && exponent <= 0) {
+            throw std::runtime_error("Invalid exponentiation");
+        }
+
+        Value result(std::pow(data_ptr->data, exponent), {data_ptr}, "pow");
+
+        result.data_ptr->backward_fn = [result, this, exponent]() {
+            this->data_ptr->grad += exponent * std::pow(this->data_ptr->data, exponent - 1) * result.data_ptr->grad;
         };
 
         return result;

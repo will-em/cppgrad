@@ -213,3 +213,53 @@ TEST_CASE("Gradient computation for self division", "[gradient]") {
     b.backward();
     REQUIRE(std::abs(a.grad() - 0.0) < 1e-6);  // gradient should be 0 because effects cancel out
 }
+
+// Pow
+TEST_CASE("Gradient computation for power with positive base and positive exponent", "[gradient]") {
+    Value a(2.0);
+    Value b = a.pow(3.0);  // b = 2.0^3.0 = 8.0
+    b.backward();
+    REQUIRE(std::abs(a.grad() - 12.0) < 1e-6);  // gradient should be 3 * 2.0^2.0 = 12.0
+}
+
+TEST_CASE("Gradient computation for power with positive base and negative exponent", "[gradient]") {
+    Value a(2.0);
+    Value b = a.pow(-2.0);  // b = 2.0^(-2.0) = 0.25
+    b.backward();
+    REQUIRE(std::abs(a.grad() + 0.25) < 1e-6);  // gradient should be -2 * 2.0^(-3.0) = -0.25
+}
+
+TEST_CASE("Gradient computation for power with negative base and positive exponent", "[gradient]") {
+    Value a(-2.0);
+    Value b = a.pow(3.0);  // b = (-2.0)^3.0 = -8.0
+    b.backward();
+    REQUIRE(std::abs(a.grad() - 12.0) < 1e-6);  // gradient should be 3 * (-2.0)^2.0 = 12.0
+}
+
+TEST_CASE("Gradient computation for power with negative base and negative exponent", "[gradient]") {
+    Value a(-2.0);
+    Value b = a.pow(-2.0);  // b = (-2.0)^(-2.0) = 0.25
+    b.backward();
+    REQUIRE(std::abs(a.grad() - 0.25) < 1e-6);  // gradient should be -2 * (-2.0)^(-3.0) = 0.25
+}
+
+TEST_CASE("Gradient computation for power with zero base and positive exponent", "[gradient]") {
+    Value a(0.0);
+    Value b = a.pow(3.0);  // b = 0.0^3.0 = 0.0
+    b.backward();
+    REQUIRE(std::abs(a.grad() - 0.0) < 1e-6);  // gradient should be 3 * 0.0^2.0 = 0.0
+}
+
+TEST_CASE("Gradient computation for power with positive base and zero exponent", "[gradient]") {
+    Value a(2.0);
+    Value b = a.pow(0.0);  // b = 2.0^0.0 = 1.0
+    b.backward();
+    REQUIRE(std::abs(a.grad() - 0.0) < 1e-6);  // gradient should be 0 because exponent is 0
+}
+
+TEST_CASE("Gradient computation for power with positive base and fractional exponent", "[gradient]") {
+    Value a(4.0);
+    Value b = a.pow(0.5);  // b = 4.0^0.5 = 2.0
+    b.backward();
+    REQUIRE(std::abs(a.grad() - 0.25) < 1e-6);  // gradient should be 0.5 * 4.0^(-0.5) = 0.25
+}
