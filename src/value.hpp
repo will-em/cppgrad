@@ -67,6 +67,18 @@ public:
         return result;
     }
 
+    Value operator/(const Value& other) const {
+        if (other.data_ptr->data == 0) throw std::runtime_error("Division by zero");
+        Value result(data_ptr->data / other.data_ptr->data, {data_ptr, other.data_ptr}, "/");
+
+        result.data_ptr->backward_fn = [result, this, other]() {
+            this->data_ptr->grad += result.data_ptr->grad / other.data_ptr->data;
+            other.data_ptr->grad -= result.data_ptr->grad * this->data_ptr->data / (other.data_ptr->data * other.data_ptr->data);
+        };
+
+        return result;
+    }
+
     // Backward pass
     void backward() {
 
