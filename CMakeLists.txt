@@ -13,7 +13,8 @@ target_include_directories(cppgrad PRIVATE src)
 find_package(Catch2 REQUIRED)
 
 # Add test executable
-add_executable(cppgrad_tests tests/value_test.cpp)
+file(GLOB TEST_SOURCES tests/*.cpp)
+add_executable(cppgrad_tests ${TEST_SOURCES})
 target_include_directories(cppgrad_tests PRIVATE src)
 target_link_libraries(cppgrad_tests PRIVATE Catch2::Catch2)
 
