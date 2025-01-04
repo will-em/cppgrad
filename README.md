@@ -1,2 +1,2 @@
 # cppgrad
-Basically micrograd in C++
+Basically [micrograd](https://github.com/karpathy/micrograd/tree/master) in C++
