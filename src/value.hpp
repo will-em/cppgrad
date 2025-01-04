@@ -37,6 +37,9 @@ class Value {
     double grad() const noexcept { return data_ptr->grad; }
     std::string op() const noexcept { return data_ptr->op; }
 
+    void set_data(double new_data) noexcept { data_ptr->data = new_data; }
+    void set_grad(double new_grad) noexcept { data_ptr->grad = new_grad; }
+
     std::string str() const;
 
     // Operations

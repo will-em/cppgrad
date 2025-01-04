@@ -57,3 +57,27 @@ TEST_CASE("Value construction with negative numbers", "[construction]") {
     REQUIRE(std::abs(v.grad() - 0.0) < 1e-6);
     REQUIRE(v.op() == "");
 }
+
+TEST_CASE("Value data setter", "[construction]") {
+    Value v(1.0);
+    v.set_data(2.5);
+    REQUIRE(std::abs(v.data() - 2.5) < 1e-6);
+
+    v.set_data(-3.14);
+    REQUIRE(std::abs(v.data() + 3.14) < 1e-6);
+
+    v.set_data(0.0);
+    REQUIRE(std::abs(v.data() - 0.0) < 1e-6);
+}
+
+TEST_CASE("Value gradient setter", "[construction]") {
+    Value v(1.0);
+    v.set_grad(1.0);
+    REQUIRE(std::abs(v.grad() - 1.0) < 1e-6);
+
+    v.set_grad(-2.5);
+    REQUIRE(std::abs(v.grad() + 2.5) < 1e-6);
+
+    v.set_grad(0.0);
+    REQUIRE(std::abs(v.grad() - 0.0) < 1e-6);
+}

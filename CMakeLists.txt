@@ -26,6 +26,7 @@ file(GLOB TEST_SOURCES tests/*.cpp)
 add_executable(cppgrad_tests 
     ${TEST_SOURCES}
     src/value.cpp
+    src/neuron.cpp
 )
 target_include_directories(cppgrad_tests PRIVATE src)
 target_link_libraries(cppgrad_tests PRIVATE Catch2::Catch2WithMain)
