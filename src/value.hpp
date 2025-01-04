@@ -95,6 +95,7 @@ class Value {
         return result;
     }
 
+    // Operations
     Value pow(double exponent) const {
         if (data_ptr->data < 0 && std::floor(exponent) != exponent) {
             throw std::runtime_error("Imaginary result not allowed");
@@ -112,14 +113,23 @@ class Value {
         return result;
     }
 
+    Value relu() const {
+        Value result(std::max(data_ptr->data, 0.0), {data_ptr}, "ReLU");
+
+        result.data_ptr->backward_fn = [result, this]() {
+            this->data_ptr->grad += (this->data_ptr->data > 0) ? result.data_ptr->grad : 0.0;
+        };
+
+        return result;
+    }
+
     // Backward pass
     void backward() {
         // Topological sort
         std::vector<DataPtr> topo_order;
         std::unordered_set<DataPtr> visited;
         std::function<void(const DataPtr&)> buildTopo = [&](const DataPtr& node) {
-            if (visited.find(node) != visited.end())
-                return;  // Already visited
+            if (visited.find(node) != visited.end()) return;  // Already visited
             visited.insert(node);
             for (const auto& child : node->children) {
                 buildTopo(child);

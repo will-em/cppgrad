@@ -228,3 +228,34 @@ TEST_CASE("Value power with zero base and zero exponent", "[arithmetic]") {
     Value q(0.0);
     REQUIRE_THROWS_AS(q.pow(0.0), std::runtime_error);
 }
+
+// ReLU
+TEST_CASE("Value ReLU with positive number", "[arithmetic]") {
+    Value a(2.0);
+    Value b = a.relu();
+    REQUIRE(std::abs(b.data() - 2.0) < 1e-6);
+}
+
+TEST_CASE("Value ReLU with negative number", "[arithmetic]") {
+    Value c(-2.0);
+    Value d = c.relu();
+    REQUIRE(std::abs(d.data() - 0.0) < 1e-6);
+}
+
+TEST_CASE("Value ReLU with zero", "[arithmetic]") {
+    Value e(0.0);
+    Value f = e.relu();
+    REQUIRE(std::abs(f.data() - 0.0) < 1e-6);
+}
+
+TEST_CASE("Value ReLU with positive decimal number", "[arithmetic]") {
+    Value g(1.5);
+    Value h = g.relu();
+    REQUIRE(std::abs(h.data() - 1.5) < 1e-6);
+}
+
+TEST_CASE("Value ReLU with negative decimal number", "[arithmetic]") {
+    Value i(-1.5);
+    Value j = i.relu();
+    REQUIRE(std::abs(j.data() - 0.0) < 1e-6);
+}

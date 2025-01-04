@@ -264,3 +264,45 @@ TEST_CASE("Gradient computation for power with positive base and fractional expo
     b.backward();
     REQUIRE(std::abs(a.grad() - 0.25) < 1e-6);  // gradient should be 0.5 * 4.0^(-0.5) = 0.25
 }
+
+// ReLU
+TEST_CASE("Gradient computation for ReLU with positive input", "[gradient]") {
+    Value a(2.0);
+    Value b = a.relu();  // b = ReLU(2.0) = 2.0
+    b.backward();
+    REQUIRE(std::abs(a.grad() - 1.0) < 1e-6);  // gradient should be 1 because input is positive
+}
+
+TEST_CASE("Gradient computation for ReLU with negative input", "[gradient]") {
+    Value a(-2.0);
+    Value b = a.relu();  // b = ReLU(-2.0) = 0.0
+    b.backward();
+    REQUIRE(std::abs(a.grad() - 0.0) < 1e-6);  // gradient should be 0 because input is negative
+}
+
+TEST_CASE("Gradient computation for ReLU with zero input", "[gradient]") {
+    Value a(0.0);
+    Value b = a.relu();  // b = ReLU(0.0) = 0.0
+    b.backward();
+    REQUIRE(std::abs(a.grad() - 0.0) < 1e-6);  // gradient should be 0 because input is zero
+}
+
+TEST_CASE("Gradient computation for ReLU with positive and negative inputs", "[gradient]") {
+    Value a(1.0);
+    Value b(-1.0);
+    Value c = a.relu() + b.relu();  // c = ReLU(1.0) + ReLU(-1.0) = 1.0 + 0.0 = 1.0
+    c.backward();
+    REQUIRE(std::abs(a.grad() - 1.0) < 1e-6);  // gradient should be 1 for positive input
+    REQUIRE(std::abs(b.grad() - 0.0) < 1e-6);  // gradient should be 0 for negative input
+}
+
+TEST_CASE("Gradient computation for ReLU with mixed inputs", "[gradient]") {
+    Value a(1.0);
+    Value b(0.0);
+    Value c(-1.0);
+    Value d = a.relu() + b.relu() + c.relu();  // d = ReLU(1.0) + ReLU(0.0) + ReLU(-1.0) = 1.0 + 0.0 + 0.0 = 1.0
+    d.backward();
+    REQUIRE(std::abs(a.grad() - 1.0) < 1e-6);  // gradient should be 1 for positive input
+    REQUIRE(std::abs(b.grad() - 0.0) < 1e-6);  // gradient should be 0 for zero input
+    REQUIRE(std::abs(c.grad() - 0.0) < 1e-6);  // gradient should be 0 for negative input
+}
