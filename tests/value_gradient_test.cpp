@@ -1,6 +1,7 @@
 #include <catch2/catch_all.hpp>
-#include "value.hpp"
 #include <cmath>
+
+#include "value.hpp"
 
 // Addition
 TEST_CASE("Gradient computation for addition with positive numbers", "[gradient]") {

@@ -1,6 +1,7 @@
 #include <catch2/catch_all.hpp>
-#include "value.hpp"
 #include <sstream>
+
+#include "value.hpp"
 
 TEST_CASE("Value string representation", "[utility]") {
     Value v(3.14);

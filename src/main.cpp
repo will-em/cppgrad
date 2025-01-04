@@ -1,5 +1,6 @@
-#include "value.hpp"
 #include <iostream>
+
+#include "value.hpp"
 
 int main() {
     Value a(2.0);

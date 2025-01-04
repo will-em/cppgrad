@@ -1,6 +1,7 @@
 #include <catch2/catch_test_macros.hpp>
-#include "value.hpp"
 #include <sstream>
+
+#include "value.hpp"
 
 TEST_CASE("Value construction and basic properties", "[construction]") {
     Value v(3.14);
@@ -17,7 +18,7 @@ TEST_CASE("Value copy construction and assignment", "[construction]") {
 
     REQUIRE(std::abs(v1.data() - v2.data()) < 1e-6);
     REQUIRE(std::abs(v1.data() - v3.data()) < 1e-6);
-    
+
     // Modify original - gradients should propagate to copies
     v1.backward();
     REQUIRE(std::abs(v2.grad() - v1.grad()) < 1e-6);  // v2 should be affected
@@ -38,7 +39,7 @@ TEST_CASE("Value construction with operation info", "[construction]") {
     Value v1(2.0);
     Value v2(3.0);
     Value v3 = v1 + v2;
-    
+
     REQUIRE(v3.op() == "+");
     REQUIRE(std::abs(v3.data() - 5.0) < 1e-6);
 }

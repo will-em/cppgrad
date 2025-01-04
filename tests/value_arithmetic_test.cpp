@@ -1,6 +1,7 @@
 #include <catch2/catch_all.hpp>
-#include "value.hpp"
 #include <cmath>
+
+#include "value.hpp"
 
 // Addition
 TEST_CASE("Value addition with positive numbers", "[arithmetic]") {
