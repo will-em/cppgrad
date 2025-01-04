@@ -17,15 +17,11 @@ Neuron::Neuron(size_t input_size, bool use_nonlinearity) : use_nonlinearity_(use
 
 Value Neuron::operator()(const std::vector<Value>& inputs) {
     Value activation = weights_.back();  // bias term
-    for (size_t i = 0; i < inputs.size(); ++i) {
-        activation = activation + weights_[i] * inputs[i];
-    }
+    activation = std::inner_product(weights_.begin(), weights_.end() - 1, inputs.begin(), activation);
     return use_nonlinearity_ ? activation.relu() : activation;
 }
 
-std::vector<Value> Neuron::parameters() {
-    return weights_;  // Simply return all weights including bias
-}
+std::vector<Value> Neuron::parameters() { return weights_; }
 
 std::string Neuron::str() const {
     return (use_nonlinearity_ ? "ReLU" : "Linear") + std::string("Neuron(") + std::to_string(weights_.size()) + ")";
