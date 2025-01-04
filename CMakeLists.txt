@@ -5,8 +5,11 @@ project(cppgrad VERSION 1.0)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
+# Get all source files
+file(GLOB SRC_SOURCES src/*.cpp)
+
 # Add main executable
-add_executable(cppgrad src/main.cpp)
+add_executable(cppgrad ${SRC_SOURCES})
 target_include_directories(cppgrad PRIVATE src)
 
 # Setup Catch2 using FetchContent
@@ -20,7 +23,10 @@ FetchContent_MakeAvailable(Catch2)
 
 # Add test executable
 file(GLOB TEST_SOURCES tests/*.cpp)
-add_executable(cppgrad_tests ${TEST_SOURCES})
+add_executable(cppgrad_tests 
+    ${TEST_SOURCES}
+    src/value.cpp
+)
 target_include_directories(cppgrad_tests PRIVATE src)
 target_link_libraries(cppgrad_tests PRIVATE Catch2::Catch2WithMain)
 
